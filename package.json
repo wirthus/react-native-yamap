@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "prepublishOnly": "rm -rf build && tsc",
+    "prepublishOnly": "rimraf build && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "homepage": "https://github.com/volga-volga/react-native-yamap",
@@ -26,11 +26,11 @@
   ],
   "author": "Nikita Sirotkin",
   "license": "",
-  "dependencies": {},
   "devDependencies": {
-    "typescript": "^3.8.3",
     "@types/react": "*",
-    "@types/react-native": "*"
+    "@types/react-native": "*",
+    "rimraf": "5.0.5",
+    "typescript": "5.4.5"
   },
   "peerDependencies": {
     "react": "*",
