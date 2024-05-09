@@ -292,9 +292,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-yamap-plus@workspace:.":
+"react-native-yamap@workspace:.":
   version: 0.0.0-use.local
-  resolution: "react-native-yamap-plus@workspace:."
+  resolution: "react-native-yamap@workspace:."
   dependencies:
     "@types/react": "*"
     "@types/react-native": "*"

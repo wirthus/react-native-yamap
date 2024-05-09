@@ -29,6 +29,7 @@ import com.yandex.mapkit.directions.driving.DrivingSection;
 import com.yandex.mapkit.directions.driving.DrivingSession;
 import com.yandex.mapkit.directions.driving.VehicleOptions;
 import com.yandex.mapkit.geometry.BoundingBox;
+import com.yandex.mapkit.geometry.Geometry;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.geometry.Polyline;
 import com.yandex.mapkit.geometry.SubpolylineHelper;
@@ -308,7 +309,7 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
             ArrayList<RequestPoint> _points = new ArrayList<>();
             for (int i = 0; i < points.size(); ++i) {
                 Point point = points.get(i);
-                RequestPoint _p = new RequestPoint(point, RequestPointType.WAYPOINT, null);
+                RequestPoint _p = new RequestPoint(point, RequestPointType.WAYPOINT, null, null);
                 _points.add(_p);
             }
             drivingRouter.requestRoutes(_points, new DrivingOptions(), new VehicleOptions(), listener);
@@ -317,7 +318,7 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         ArrayList<RequestPoint> _points = new ArrayList<>();
         for (int i = 0; i < points.size(); ++i) {
             Point point = points.get(i);
-            _points.add(new RequestPoint(point, RequestPointType.WAYPOINT, null));
+            _points.add(new RequestPoint(point, RequestPointType.WAYPOINT, null, null));
         }
         Session.RouteListener listener = new Session.RouteListener() {
             @Override
@@ -366,47 +367,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         fitMarkers(points);
     }
 
-    private ArrayList<Point> mapPlacemarksToPoints(List<PlacemarkMapObject> placemarks) {
-        ArrayList<Point> points = new ArrayList<Point>();
-
-        for (int i = 0; i < placemarks.size(); ++i) {
-            points.add(placemarks.get(i).getGeometry());
-        }
-
-        return points;
-    }
-
-    BoundingBox calculateBoundingBox(ArrayList<Point> points) {
-        double minLon = points.get(0).getLongitude();
-        double maxLon = points.get(0).getLongitude();
-        double minLat = points.get(0).getLatitude();
-        double maxLat = points.get(0).getLatitude();
-
-        for (int i = 0; i < points.size(); i++) {
-            if (points.get(i).getLongitude() > maxLon) {
-                maxLon = points.get(i).getLongitude();
-            }
-
-            if (points.get(i).getLongitude() < minLon) {
-                minLon = points.get(i).getLongitude();
-            }
-
-            if (points.get(i).getLatitude() > maxLat) {
-                maxLat = points.get(i).getLatitude();
-            }
-
-            if (points.get(i).getLatitude() < minLat) {
-                minLat = points.get(i).getLatitude();
-            }
-        }
-
-        Point southWest = new Point(minLat, minLon);
-        Point northEast = new Point(maxLat, maxLon);
-
-        BoundingBox boundingBox = new BoundingBox(southWest, northEast);
-        return boundingBox;
-    }
-
     public void fitMarkers(ArrayList<Point> points) {
         if (points.size() == 0) {
             return;
@@ -416,7 +376,10 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
             getMap().move(new CameraPosition(center, 15, 0, 0));
             return;
         }
-        CameraPosition cameraPosition = getMap().cameraPosition(calculateBoundingBox(points));
+
+        Polyline polyline = new Polyline(points);
+        Geometry geometry = Geometry.fromPolyline(polyline);
+        CameraPosition cameraPosition = getMap().cameraPosition(geometry);
         cameraPosition = new CameraPosition(cameraPosition.getTarget(), cameraPosition.getZoom() - 0.8f, cameraPosition.getAzimuth(), cameraPosition.getTilt());
         getMap().move(cameraPosition, new Animation(Animation.Type.SMOOTH, 0.7f), null);
     }
@@ -539,11 +502,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         int horizontalPadding = (params.hasKey("horizontal") && !params.isNull("horizontal")) ? params.getInt("horizontal") : 0;
         int verticalPadding = (params.hasKey("vertical") && !params.isNull("vertical")) ? params.getInt("vertical") : 0;
         getMap().getLogo().setPadding(new Padding(horizontalPadding, verticalPadding));
-    }
-
-    public void setMaxFps(float fps) {
-        maxFps = fps;
-        getMapWindow().setMaxFps(maxFps);
     }
 
     public void setInteractive(boolean interactive) {
@@ -777,7 +735,7 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
             _child.setMapObject(obj);
         } else if (child instanceof YamapCircle) {
             YamapCircle _child = (YamapCircle) child;
-            CircleMapObject obj = getMap().getMapObjects().addCircle(_child.circle, 0, 0.f, 0);
+            CircleMapObject obj = getMap().getMapObjects().addCircle(_child.circle);
             _child.setMapObject(obj);
         }
     }

@@ -303,11 +303,6 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
         }
     }
 
-    @ReactProp(name = "maxFps")
-    public void setMaxFps(View view, float maxFps) {
-        castToYaMapView(view).setMaxFps(maxFps);
-    }
-
     @ReactProp(name = "interactive")
     public void setInteractive(View view, boolean interactive) {
         castToYaMapView(view).setInteractive(interactive);
