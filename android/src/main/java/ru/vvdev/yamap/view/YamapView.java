@@ -25,6 +25,7 @@ import com.yandex.mapkit.directions.DirectionsFactory;
 import com.yandex.mapkit.directions.driving.DrivingOptions;
 import com.yandex.mapkit.directions.driving.DrivingRoute;
 import com.yandex.mapkit.directions.driving.DrivingRouter;
+import com.yandex.mapkit.directions.driving.DrivingRouterType;
 import com.yandex.mapkit.directions.driving.DrivingSection;
 import com.yandex.mapkit.directions.driving.DrivingSession;
 import com.yandex.mapkit.directions.driving.VehicleOptions;
@@ -144,7 +145,7 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
     public YamapView(Context context) {
         super(context);
         DirectionsFactory.initialize(context);
-        drivingRouter = DirectionsFactory.getInstance().createDrivingRouter();
+        drivingRouter = DirectionsFactory.getInstance().createDrivingRouter(DrivingRouterType.COMBINED);
         getMap().addCameraListener(this);
         getMap().addInputListener(this);
         getMap().setMapLoadedListener(this);

@@ -3,7 +3,6 @@ package ru.vvdev.yamap.suggest;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -16,6 +15,7 @@ import com.yandex.mapkit.search.SearchManagerType;
 import com.yandex.mapkit.search.SearchType;
 import com.yandex.mapkit.search.SuggestItem;
 import com.yandex.mapkit.search.SuggestOptions;
+import com.yandex.mapkit.search.SuggestResponse;
 import com.yandex.mapkit.search.SuggestSession;
 import com.yandex.mapkit.search.SuggestType;
 import com.yandex.runtime.Error;
@@ -56,10 +56,11 @@ public class YandexMapSuggestClient implements MapSuggestClient {
                 options,
                 new SuggestSession.SuggestListener() {
                     @Override
-                    public void onResponse(@NonNull List<SuggestItem> list) {
-                        List<MapSuggestItem> result = new ArrayList<>(list.size());
-                        for (int i = 0; i < list.size(); i++) {
-                            SuggestItem rawSuggest = list.get(i);
+                    public void onResponse(@NonNull SuggestResponse suggestResponse) {
+                        List<SuggestItem> items = suggestResponse.getItems();
+                        List<MapSuggestItem> result = new ArrayList<>(items.size());
+                        for (int i = 0; i < items.size(); i++) {
+                            SuggestItem rawSuggest = items.get(i);
                             MapSuggestItem suggest = new MapSuggestItem();
                             suggest.setSearchText(rawSuggest.getSearchText());
                             suggest.setTitle(rawSuggest.getTitle().getText());
