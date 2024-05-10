@@ -1,6 +1,6 @@
 {
   "name": "react-native-yamap-plus",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "description": "Yandex.MapKit and Yandex.Geocoder for react-native",
   "main": "build/commonjs/index",
   "module": "build/module/index",
