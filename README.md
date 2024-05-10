@@ -14,7 +14,7 @@ yarn add react-native-yamap
 ```
 или
 ```
-npm i react-native-yamap --save
+npm i react-native-yamap-plus --save
 ```
 
 ### Линковка
@@ -26,7 +26,7 @@ npm i react-native-yamap --save
 #### Линковка в React Native <0.60
 
 ```
-react-native link react-native-yamap
+react-native link react-native-yamap-plus
 ```
 
 ## Использование карт
@@ -36,7 +36,7 @@ react-native link react-native-yamap
 Для этого лучше всего зайти в корневой файл приложения, например `App.js`, и добавить инициализацию:
 
 ```js
-import YaMap from 'react-native-yamap';
+import YaMap from 'react-native-yamap-plus';
 
 YaMap.init('API_KEY');
 ```
@@ -66,7 +66,7 @@ YaMap.init('API_KEY');
 ### Изменение языка карт
 
 ```js
-import YaMap from 'react-native-yamap';
+import YaMap from 'react-native-yamap-plus';
 
 const currentLocale = await YaMap.getLocale();
 YaMap.setLocale('en_US');  // 'ru_RU' или другие
@@ -90,7 +90,7 @@ YaMap.resetLocale();
 
 ```jsx
 import React from 'react';
-import YaMap from 'react-native-yamap';
+import YaMap from 'react-native-yamap-plus';
 
 const Map = () => {
   return (
@@ -286,7 +286,7 @@ type YandexLogoPadding = {
 ### Marker
 
 ```jsx
-import { Marker } from 'react-native-yamap';
+import { Marker } from 'react-native-yamap-plus';
 
 <YaMap>
   <Marker point={{ lat: 50, lon: 50 }}/>
@@ -314,7 +314,7 @@ import { Marker } from 'react-native-yamap';
 ### Circle
 
 ```jsx
-import { Circle } from 'react-native-yamap';
+import { Circle } from 'react-native-yamap-plus';
 
 <YaMap>
   <Circle center={{ lat: 50, lon: 50 }} radius={300} />
@@ -336,7 +336,7 @@ import { Circle } from 'react-native-yamap';
 ### Polyline
 
 ```jsx
-import { Polyline } from 'react-native-yamap';
+import { Polyline } from 'react-native-yamap-plus';
 
 <YaMap>
   <Polyline
@@ -367,7 +367,7 @@ import { Polyline } from 'react-native-yamap';
 ### Polygon
 
 ```jsx
-import { Polygon } from 'react-native-yamap';
+import { Polygon } from 'react-native-yamap-plus';
 
 <YaMap>
   <Polygon
@@ -427,7 +427,7 @@ findDrivingRoutes(points: Point[], callback: (event: RoutesFoundEvent) => void):
 ### Инициализация
 
 ```typescript
-import { Geocoder } from 'react-native-yamap';
+import { Geocoder } from 'react-native-yamap-plus';
 
 Geocoder.init('API_KEY');
 ```
@@ -487,7 +487,7 @@ Geocoder.addressToGeo(address: string);
 
 ```typescript
 
-import { Suggest } from 'react-native-yamap';
+import { Suggest } from 'react-native-yamap-plus';
 
 const find = async (query: string, options?: SuggestOptions) => {
   const suggestions = await Suggest.suggest(query, options);
@@ -518,7 +518,7 @@ const find = async (query: string, options?: SuggestOptions) => {
 
 ```jsx
 import React from 'react';
-import { ClusteredYamap } from '../../react-native-yamap/src';
+import { ClusteredYamap } from 'react-native-yamap-plus';
 
 const Map = () => {
   return (
@@ -556,7 +556,7 @@ const Map = () => {
 Для подключения нативного модуля в приложение с expo используйте expo prebuild.
 Он выполнит eject и сгенерирует привычные папки android и ios с нативным кодом. Это позволит использовать любую библиотеку так же, как и приложение с react native cli.
 
-Для корректной работы на iOS react-native-yamap требует обновить AppDelegate.mm и инициализировать YMKMapKit при запуске приложения. prebuild не гарантирует сохранности папок android и ios, их нет смысла включать в Git. Чтобы напрямую менять нативный код есть config plugins.
+Для корректной работы на iOS react-native-yamap-plus требует обновить AppDelegate.mm и инициализировать YMKMapKit при запуске приложения. prebuild не гарантирует сохранности папок android и ios, их нет смысла включать в Git. Чтобы напрямую менять нативный код есть config plugins.
 
 Обновите app.json на app.config.ts и используйте этот пример модификации AppDelegate:
 ```jsx
