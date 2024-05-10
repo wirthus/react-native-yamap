@@ -11,7 +11,7 @@
     "prepare": "bob build",
     "release": "release-it"
   },
-  "homepage": "https://github.com/volga-volga/react-native-yamap",
+  "homepage": "https://github.com/qudaeo/react-native-yamap-plus",
   "keywords": [
     "react-native",
     "mapkit",
