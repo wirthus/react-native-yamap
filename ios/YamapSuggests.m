@@ -44,7 +44,7 @@ NSString* YandexSuggestErrorDomain = @"YandexSuggestErrorDomain";
 
     if (!searchManager) {
         runOnMainQueueWithoutDeadlocking(^{
-            self->searchManager = [[YMKSearch sharedInstance] createSearchManagerWithSearchManagerType: YMKSearchManagerTypeOnline];
+            self->searchManager = [[YMKSearchFactory instance] createSearchManagerWithSearchManagerType: YMKSearchManagerTypeOnline];
         });
     }
 
