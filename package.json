@@ -53,6 +53,7 @@
     "!ios/RNYamap.xcodeproj/xcuserdata",
     "src",
     "build",
+    "RNYamap.podspec",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"
