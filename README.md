@@ -10,7 +10,7 @@
 ## Установка
 
 ```
-yarn add react-native-yamap
+yarn add react-native-yamap-plus
 ```
 или
 ```
