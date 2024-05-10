@@ -59,7 +59,6 @@ public class RNYamapModule extends ReactContextBaseJavaModule {
                     }
 
                     MapKitFactory.initialize(reactContext);
-                    TransportFactory.initialize(reactContext);
                     MapKitFactory.getInstance().onStart();
                     promise.resolve(null);
                 } catch (Exception exception) {

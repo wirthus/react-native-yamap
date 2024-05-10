@@ -35,5 +35,5 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.yandex.android:maps.mobile:4.5.2-full'
+    implementation 'com.yandex.android:maps.mobile:4.6.1-full'
 }

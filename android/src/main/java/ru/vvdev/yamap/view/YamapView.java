@@ -144,7 +144,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
 
     public YamapView(Context context) {
         super(context);
-        DirectionsFactory.initialize(context);
         drivingRouter = DirectionsFactory.getInstance().createDrivingRouter(DrivingRouterType.COMBINED);
         getMap().addCameraListener(this);
         getMap().addInputListener(this);
@@ -349,11 +348,11 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
             }
         };
         if (vehicles.size() == 0) {
-            pedestrianRouter.requestRoutes(_points, new TimeOptions(), listener);
+            pedestrianRouter.requestRoutes(_points, new TimeOptions(), false, listener);
             return;
         }
         TransitOptions transitOptions = new TransitOptions(FilterVehicleTypes.NONE.value, new TimeOptions());
-        masstransitRouter.requestRoutes(_points, transitOptions, listener);
+        masstransitRouter.requestRoutes(_points, transitOptions, false, listener);
     }
 
     public void fitAllMarkers() {

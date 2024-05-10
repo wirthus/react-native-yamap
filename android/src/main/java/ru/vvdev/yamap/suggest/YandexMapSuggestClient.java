@@ -40,7 +40,6 @@ public class YandexMapSuggestClient implements MapSuggestClient {
     private BoundingBox defaultGeometry = new BoundingBox(new Point(-90.0, -180.0), new Point(90.0, 180.0));
 
     public YandexMapSuggestClient(Context context) {
-        SearchFactory.initialize(context);
         searchManager = SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED);
         suggestOptions.setSuggestTypes(SearchType.GEO.value);
     }
