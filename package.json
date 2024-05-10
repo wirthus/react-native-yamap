@@ -45,7 +45,11 @@
   "source": "src/index.ts",
   "files": [
     "android",
+    "!android/build",
+    "!android/.gradle",
     "ios",
+    "!ios/RNYamap.xcodeproj/project.xcworkspace",
+    "!ios/RNYamap.xcodeproj/xcuserdata",
     "src",
     "build",
     "!**/__tests__",
