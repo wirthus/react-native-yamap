@@ -2,11 +2,14 @@
   "name": "react-native-yamap-plus",
   "version": "4.2.0",
   "description": "Yandex.MapKit and Yandex.Geocoder for react-native",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "main": "build/commonjs/index",
+  "module": "build/module/index",
+  "types": "build/typescript/index.d.ts",
   "scripts": {
-    "prepublishOnly": "rimraf build && tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "rimraf build && bob build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "bob build",
+    "release": "release-it"
   },
   "homepage": "https://github.com/volga-volga/react-native-yamap",
   "keywords": [
@@ -29,11 +32,35 @@
   "devDependencies": {
     "@types/react": "*",
     "@types/react-native": "*",
+    "react-native-builder-bob": "0.23.2",
+    "release-it": "17.2.1",
     "rimraf": "5.0.5",
     "typescript": "5.4.5"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
-  }
+  },
+  "react-native": "src/index.ts",
+  "source": "src/index.ts",
+  "files": [
+    "src",
+    "build",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "build",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "build/"
+  ]
 }

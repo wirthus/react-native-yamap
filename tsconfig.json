@@ -10,7 +10,6 @@
     "lib": ["dom", "es5", "es6", "scripthost"],
     "target": "es5",
     "rootDir": "./src",
-    "outDir": "build",
     "sourceMap": true,
     "skipLibCheck": true
   },
