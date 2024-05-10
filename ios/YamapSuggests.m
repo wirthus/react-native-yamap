@@ -44,7 +44,7 @@ NSString* YandexSuggestErrorDomain = @"YandexSuggestErrorDomain";
 
     if (!searchManager) {
         runOnMainQueueWithoutDeadlocking(^{
-            self->searchManager = [[YMKSearch sharedInstance] createSearchManagerWithSearchManagerType:YMKSearchSearchManagerTypeOnline];
+            self->searchManager = [[YMKSearch sharedInstance] createSearchManagerWithSearchManagerType: YMKSearchManagerTypeOnline];
         });
     }
 
@@ -61,9 +61,9 @@ NSString* YandexSuggestErrorDomain = @"YandexSuggestErrorDomain";
 
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[session suggestWithText:searchQuery
-												window:boundingBox
-								suggestOptions:options
-							 responseHandler:^(NSArray<YMKSuggestItem *> * _Nullable suggestList, NSError * _Nullable error) {
+			        window:boundingBox
+			        suggestOptions:options
+					responseHandler:^(YMKSuggestResponse * _Nullable response, NSError * _Nullable error) {
 				if (error) {
 					reject(ERR_SUGGEST_FAILED, [NSString stringWithFormat:@"search request: %@", searchQuery], error);
 					return;
@@ -71,7 +71,7 @@ NSString* YandexSuggestErrorDomain = @"YandexSuggestErrorDomain";
 
 				NSMutableArray *suggestsToPass = [NSMutableArray new];
 
-				for (YMKSuggestItem* suggest in suggestList) {
+				for (YMKSuggestItem* suggest in response.items) {
 					NSMutableDictionary *suggestToPass = [NSMutableDictionary new];
 
 					[suggestToPass setValue:[[suggest title] text] forKey:@"title"];

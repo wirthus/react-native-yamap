@@ -147,12 +147,6 @@ RCT_CUSTOM_VIEW_PROPERTY(initialRegion, NSDictionary, RNYMView) {
     }
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(maxFps, NSNumber, RNYMView) {
-    if (json && view) {
-        [view setMaxFps:[json floatValue]];
-    }
-}
-
 RCT_CUSTOM_VIEW_PROPERTY(interactive, BOOL, RNYMView) {
     if (json && view) {
         [view setInteractive:[json boolValue]];
@@ -212,7 +206,7 @@ RCT_EXPORT_METHOD(findRoutes:(nonnull NSNumber *)reactTag json:(NSDictionary *)j
         NSMutableArray<YMKRequestPoint *> *requestPoints = [[NSMutableArray alloc] init];
 
         for (int i = 0; i < [points count]; ++i) {
-            YMKRequestPoint *requestPoint = [YMKRequestPoint requestPointWithPoint:[points objectAtIndex:i] type:YMKRequestPointTypeWaypoint pointContext:nil];
+            YMKRequestPoint *requestPoint = [YMKRequestPoint requestPointWithPoint:[points objectAtIndex:i] type:YMKRequestPointTypeWaypoint pointContext:nil drivingArrivalPointId:nil];
             [requestPoints addObject:requestPoint];
         }
 

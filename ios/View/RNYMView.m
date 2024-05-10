@@ -59,7 +59,7 @@
 
     _reactSubviews = [[NSMutableArray alloc] init];
     masstransitRouter = [[YMKTransport sharedInstance] createMasstransitRouter];
-    drivingRouter = [[YMKDirections sharedInstance] createDrivingRouter];
+    drivingRouter = [[YMKDirections sharedInstance] createDrivingRouterWithType: YMKDrivingRouterTypeCombined];
     pedestrianRouter = [[YMKTransport sharedInstance] createPedestrianRouter];
     transitOptions = [YMKTransitOptions transitOptionsWithAvoid:YMKFilterVehicleTypesNone timeOptions:[[YMKTimeOptions alloc] init]];    acceptVehicleTypes = [[NSMutableArray<NSString *> alloc] init];
     routes = [[NSMutableArray alloc] init];
@@ -118,7 +118,7 @@
 
     [routeMetadata setObject:wTransports forKey:@"transports"];
     NSMutableArray* points = [[NSMutableArray alloc] init];
-    YMKPolyline* subpolyline = YMKMakeSubpolyline(route.geometry, section.geometry);
+    YMKPolyline *subpolyline = [YMKSubpolylineHelper subpolylineWithPolyline: route.geometry subpolyline:section.geometry];
 
     for (int i = 0; i < [subpolyline.points count]; ++i) {
         YMKPoint* point = [subpolyline.points objectAtIndex:i];
@@ -203,7 +203,7 @@
 
     [routeMetadata setObject:wTransports forKey:@"transports"];
     NSMutableArray *points = [[NSMutableArray alloc] init];
-    YMKPolyline *subpolyline = YMKMakeSubpolyline(route.geometry, section.geometry);
+    YMKPolyline *subpolyline = [YMKSubpolylineHelper subpolylineWithPolyline: route.geometry subpolyline:section.geometry];
 
     for (int i = 0; i < [subpolyline.points count]; ++i) {
         YMKPoint *point = [subpolyline.points objectAtIndex:i];
@@ -222,7 +222,7 @@
     __weak RNYMView *weakSelf = self;
 
     if ([vehicles count] == 1 && [[vehicles objectAtIndex:0] isEqualToString:@"car"]) {
-        YMKDrivingDrivingOptions *drivingOptions = [[YMKDrivingDrivingOptions alloc] init];
+        YMKDrivingOptions *drivingOptions = [[YMKDrivingOptions alloc] init];
         YMKDrivingVehicleOptions *vehicleOptions = [[YMKDrivingVehicleOptions alloc] init];
 
         drivingSession = [drivingRouter requestRoutesWithPoints:_points drivingOptions:drivingOptions
@@ -327,7 +327,7 @@
 - (void)setCenter:(YMKCameraPosition *)position withDuration:(float)duration withAnimation:(int)animation {
     if (duration > 0) {
         YMKAnimationType anim = animation == 0 ? YMKAnimationTypeSmooth : YMKAnimationTypeLinear;
-        [self.mapWindow.map moveWithCameraPosition:position animationType:[YMKAnimation animationWithType:anim duration: duration] cameraCallback:^(BOOL completed) {}];
+        [self.mapWindow.map moveWithCameraPosition:position animation:[YMKAnimation animationWithType:anim duration: duration] cameraCallback:^(BOOL completed) {}];
     } else {
         [self.mapWindow.map moveWithCameraPosition:position];
     }
@@ -562,32 +562,16 @@
     return points;
 }
 
-- (YMKBoundingBox *)calculateBoundingBox:(NSArray<YMKPoint *> *) points {
-    double minLon = [points[0] longitude], maxLon = [points[0] longitude];
-    double minLat = [points[0] latitude], maxLat = [points[0] latitude];
-
-    for (int i = 0; i < [points count]; i++) {
-        if ([points[i] longitude] > maxLon) maxLon = [points[i] longitude];
-        if ([points[i] longitude] < minLon) minLon = [points[i] longitude];
-        if ([points[i] latitude] > maxLat) maxLat = [points[i] latitude];
-        if ([points[i] latitude] < minLat) minLat = [points[i] latitude];
-    }
-
-    YMKPoint *southWest = [YMKPoint pointWithLatitude:minLat longitude:minLon];
-    YMKPoint *northEast = [YMKPoint pointWithLatitude:maxLat longitude:maxLon];
-    YMKBoundingBox *boundingBox = [YMKBoundingBox boundingBoxWithSouthWest:southWest northEast:northEast];
-    return boundingBox;
-}
-
 - (void)fitMarkers:(NSArray<YMKPoint *> *) points {
     if ([points count] == 1) {
         YMKPoint *center = [points objectAtIndex:0];
         [self.mapWindow.map moveWithCameraPosition:[YMKCameraPosition cameraPositionWithTarget:center zoom:15 azimuth:0 tilt:0]];
         return;
     }
-    YMKCameraPosition *cameraPosition = [self.mapWindow.map cameraPositionWithBoundingBox:[self calculateBoundingBox:points]];
+    YMKPolyline *polyline = [YMKPolyline polylineWithPoints: points];
+    YMKCameraPosition *cameraPosition = [self.mapWindow.map cameraPositionWithGeometry: [YMKGeometry geometryWithPolyline: polyline]];
     cameraPosition = [YMKCameraPosition cameraPositionWithTarget:cameraPosition.target zoom:cameraPosition.zoom - 0.8f azimuth:cameraPosition.azimuth tilt:cameraPosition.tilt];
-    [self.mapWindow.map moveWithCameraPosition:cameraPosition animationType:[YMKAnimation animationWithType:YMKAnimationTypeSmooth duration:1.0] cameraCallback:^(BOOL completed){}];
+    [self.mapWindow.map moveWithCameraPosition:cameraPosition animation:[YMKAnimation animationWithType:YMKAnimationTypeSmooth duration:1.0] cameraCallback:^(BOOL completed){}];
 }
 
 - (void)setLogoPosition:(NSDictionary *)logoPosition {
@@ -743,7 +727,7 @@
     } else if ([subview isKindOfClass:[YamapCircleView class]]) {
         YMKMapObjectCollection *objects = self.mapWindow.map.mapObjects;
         YamapCircleView *circle = (YamapCircleView*) subview;
-        YMKCircleMapObject *obj = [objects addCircleWithCircle:[circle getCircle] strokeColor:UIColor.blackColor strokeWidth:0.f fillColor:UIColor.blackColor];
+        YMKCircleMapObject *obj = [objects addCircleWithCircle:[circle getCircle]];
         [circle setMapObject:obj];
     } else {
         NSArray<id<RCTComponent>> *childSubviews = [subview reactSubviews];
@@ -818,10 +802,6 @@
 
 - (void)layoutMarginsDidChange {
     [super reactSetFrame:self.mapFrame];
-}
-
-- (void)setMaxFps:(float)maxFps {
-    [self.mapWindow setMaxFpsWithFps:maxFps];
 }
 
 - (void)setInteractive:(BOOL)interactive {
