@@ -45,7 +45,7 @@
     "android",
     "!android/build",
     "!android/.gradle",
-    "!android/gradle",
+    "!android/local.properties",
     "ios",
     "!ios/RNYamap.xcodeproj/project.xcworkspace",
     "!ios/RNYamap.xcodeproj/xcuserdata",
