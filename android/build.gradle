@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        googlePlayServicesVersion = "21.2.0"
+        playServicesLocationVersion = "21.2.0"
     }
     repositories {
         google()
