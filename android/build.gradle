@@ -1,7 +1,4 @@
 buildscript {
-    ext {
-        playServicesLocationVersion = "21.2.0"
-    }
     repositories {
         google()
         mavenCentral()
