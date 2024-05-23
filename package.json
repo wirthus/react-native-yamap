@@ -27,7 +27,7 @@
     "geocoder"
   ],
   "author": "Nikita Sirotkin",
-  "license": "",
+  "license": "MIT",
   "devDependencies": {
     "@types/react": "*",
     "@types/react-native": "*",

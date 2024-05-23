@@ -73,12 +73,15 @@ export interface RoutesFoundEvent<T extends (DrivingInfo | MasstransitInfo)> {
   };
 }
 
+export type CameraUpdateReason = "APPLICATION" | "GESTURES";
+
 export interface CameraPosition {
-  zoom: number;
-  tilt: number;
   azimuth: number;
-  point: Point;
   finished: boolean;
+  point: Point;
+  reason: CameraUpdateReason;
+  tilt: number;
+  zoom: number;
 }
 
 export type VisibleRegion = {

@@ -184,11 +184,15 @@ interface RoutesFoundEvent<T extends(DrivingInfo | MasstransitInfo)> {
   };
 }
 
+type CameraUpdateReason = "APPLICATION" | "GESTURES"
+
 interface CameraPosition {
-  zoom: number;
-  tilt: number;
-  azimuth: number;
-  point: Point;
+    azimuth: number;
+    finished: boolean;
+    point: Point;
+    reason: CameraUpdateReason;
+    tilt: number;
+    zoom: number;
 }
 
 type VisibleRegion = {
@@ -412,7 +416,7 @@ import { Polygon } from 'react-native-yamap-plus';
 
 Также можно использовать нужный роутер, вызвав соответствующую функцию
 
-```typescript
+```
 findMasstransitRoutes(points: Point[], callback: (event: RoutesFoundEvent) => void): void;
 findPedestrianRoutes(points: Point[], callback: (event: RoutesFoundEvent) => void): void;
 findDrivingRoutes(points: Point[], callback: (event: RoutesFoundEvent) => void): void;
@@ -436,7 +440,7 @@ Geocoder.init('API_KEY');
 
 ### Прямое геокодирование
 
-```typescript
+```
 Geocoder.geocode(geocode: Point, kind?: ObjectKind, results?: number, skip?: number, lang?: Lang);
 ```
 
@@ -445,7 +449,7 @@ Geocoder.geocode(geocode: Point, kind?: ObjectKind, results?: number, skip?: num
 
 #### Упрощенный вызов ####
 
-```typescript
+```
 Geocoder.geoToAddress(geo: Point);
 ```
 
@@ -466,7 +470,7 @@ interface Address {
 
 ### Обратное геокодирование
 
-```typescript
+```
 Geocoder.reverseGeocode(geocode: string, kind?: ObjectKind, results?: number,  skip?: number, lang?: Lang, rspn?: 0 | 1, ll?: Point, spn?: [number, number],  bbox?: [Point, Point]);
 ```
 
@@ -475,7 +479,7 @@ Geocoder.reverseGeocode(geocode: string, kind?: ObjectKind, results?: number,  s
 
 #### Упрощенный вызов ####
 
-```typescript
+```
 Geocoder.addressToGeo(address: string);
 ```
 
@@ -559,7 +563,7 @@ const Map = () => {
 Для корректной работы на iOS react-native-yamap-plus требует обновить AppDelegate.mm и инициализировать YMKMapKit при запуске приложения. prebuild не гарантирует сохранности папок android и ios, их нет смысла включать в Git. Чтобы напрямую менять нативный код есть config plugins.
 
 Обновите app.json на app.config.ts и используйте этот пример модификации AppDelegate:
-```jsx
+```typescript
 import { type ExpoConfig } from "@expo/config-types";
 import { withAppDelegate, type ConfigPlugin } from "expo/config-plugins";
 
