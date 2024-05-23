@@ -1,11 +1,9 @@
 
 ## React Native Yandex Maps (Яндекс Карты)
 
+#### MapKit SDK [4.6.1](https://yandex.ru/dev/mapkit/doc/ru/versions) (25 апреля 2024)
+
 Библиотека для интеграции Yandex Maps (Яндекс Карт) в React Native.
-
-## Пример
-
-[Пример использования библиотеки](https://github.com/ownikss/rn-yamaps-example)
 
 ## Установка
 
@@ -16,12 +14,6 @@ yarn add react-native-yamap-plus
 ```
 npm i react-native-yamap-plus --save
 ```
-
-### Линковка
-
-Если вы планируете использовать только API геокодера, то линковка библиотеки необязательна. В таком случае, можете отключить автолинкинг библиотеки для React Native **>0.60**.
-
-Для использования Yandex MapKit необходима линковка (библиотека поддерживает автолинкинг).
 
 #### Линковка в React Native <0.60
 
