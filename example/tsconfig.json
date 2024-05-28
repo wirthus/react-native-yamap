@@ -10,9 +10,8 @@
     "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
-    "rootDir": "./src",
     "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "rootDir": "."
   },
-  "exclude": ["example"]
 }

@@ -425,10 +425,10 @@ findDrivingRoutes(points: Point[], callback: (event: RoutesFoundEvent) => void):
 ```typescript
 import { Geocoder } from 'react-native-yamap-plus';
 
-Geocoder.init('API_KEY');
+Geocoder.init('GEOCODER_API_KEY');
 ```
 
-`API_KEY` для API геокодера и для карт **отличаются**. Инициализировать надо оба класса и каждый со своим ключем.
+`GEOCODER_API_KEY` для API геокодера и для карт **отличаются**. Инициализировать надо оба класса и каждый со своим ключем.
 
 ### Прямое геокодирование
 
