@@ -79,8 +79,8 @@ export class Geocoder {
     return Geocoder.requestWithQuery(query);
   }
 
-  static async addressToGeo(address: string): Promise<Point | undefined> {
-    const { response } = await Geocoder.reverseGeocode(address);
+  static async addressToGeo(address: string, kind?: ObjectKind): Promise<Point | undefined> {
+    const { response } = await Geocoder.reverseGeocode(address, kind, 1);
 
     if (
       response.GeoObjectCollection
@@ -98,8 +98,8 @@ export class Geocoder {
     return undefined;
   }
 
-  static async geoToAddress(geo: Point): Promise<Address | undefined> {
-    const { response } = await Geocoder.geocode(geo);
+  static async geoToAddress(geo: Point, kind?: ObjectKind, lang?: Lang): Promise<Address | undefined> {
+    const { response } = await Geocoder.geocode(geo, kind, 1, 0, lang);
 
     if (
       response.GeoObjectCollection
