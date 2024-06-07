@@ -21,6 +21,38 @@ npm i react-native-yamap-plus --save
 react-native link react-native-yamap-plus
 ```
 
+#### Android
+
+В файле /android/app/build.gradle добавить
+
+```diff
+dependencies {
+     ...
++    implementation 'com.yandex.android:maps.mobile:4.6.1-full'
+     ...
+}
+```
+
+#### iOS
+
+**Обязательно** инициализировать MapKit в функции `didFinishLaunchingWithOptions` в AppDelegate.m/AppDelegate.mm:
+
+```diff
++ #import <YandexMapsMobile/YMKMapKitFactory.h>
+
+...
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  ...
+
++  [YMKMapKit setLocale:@"ru_RU"];
++  [YMKMapKit setApiKey:@"API_KEY"];
+
+  return YES;
+}
+```
+
 ## Использование карт
 
 ### Инициализировать карты
@@ -31,28 +63,6 @@ react-native link react-native-yamap-plus
 import YaMap from 'react-native-yamap-plus';
 
 YaMap.init('API_KEY');
-```
-
-#### iOS
-
-  
-
-**Обязательно** инициализировать MapKit в функции `didFinishLaunchingWithOptions` в AppDelegate.m/AppDelegate.mm:
-
-```C
-#import <YandexMapsMobile/YMKMapKitFactory.h>
-
-...
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-  ...
-
-  [YMKMapKit setLocale:@"ru_RU"];
-  [YMKMapKit setApiKey:@"API_KEY"];
-
-  return YES;
-}
 ```
 
 ### Изменение языка карт
