@@ -260,7 +260,6 @@ type YandexLogoPadding = {
 | rotateGesturesEnabled | boolean | true | Включены ли жесты поворота камеры |
 | fastTapEnabled | boolean | true | Убрана ли задержка в 300мс при клике/тапе |
 | clusterColor | string | 'red' | Цвет фона метки-кластера |
-| maxFps | number | 60 | Максимальная частота обновления карты |
 | logoPosition | YandexLogoPosition | {} | Позиция логотипа Яндекса на карте |
 | logoPadding | YandexLogoPadding | {} | Отступ логотипа Яндекса на карте |
 | mapType | string | 'vector' | Тип карты |

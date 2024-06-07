@@ -53,7 +53,6 @@ export interface YaMapProps extends ViewProps {
   rotateGesturesEnabled?: boolean;
   fastTapEnabled?: boolean;
   initialRegion?: InitialRegion;
-  maxFps?: number;
   followUser?: boolean;
   logoPosition?: YandexLogoPosition;
   logoPadding?: YandexLogoPadding;
@@ -65,7 +64,6 @@ export class YaMap extends React.Component<YaMapProps> {
   static defaultProps = {
     showUserPosition: true,
     clusterColor: 'red',
-    maxFps: 60
   };
 
   // @ts-ignore

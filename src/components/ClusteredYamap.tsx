@@ -58,7 +58,6 @@ export interface ClusteredYaMapProps<T = any> extends ViewProps {
   rotateGesturesEnabled?: boolean;
   fastTapEnabled?: boolean;
   initialRegion?: InitialRegion;
-  maxFps?: number;
   followUser?: boolean;
   logoPosition?: YandexLogoPosition;
   logoPadding?: YandexLogoPadding;
@@ -70,7 +69,6 @@ export class ClusteredYamap extends React.Component<ClusteredYaMapProps> {
   static defaultProps = {
     showUserPosition: true,
     clusterColor: 'red',
-    maxFps: 60
   };
 
   // @ts-ignore
