@@ -1,6 +1,11 @@
 export enum Screen {
-    Maps = 'Maps',
+    Map = 'Map',
     AddressToGeo = 'AddressToGeo',
+    ClusteredMap = 'ClusteredMap',
 }
 
-export const screens = [Screen.Maps, Screen.AddressToGeo]
+export const screens = [
+    Screen.Map,
+    Screen.AddressToGeo,
+    Screen.ClusteredMap,
+]
