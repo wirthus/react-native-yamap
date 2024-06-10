@@ -29,6 +29,10 @@ static def supportsNamespace() {
     return (major == 7 && minor >= 3) || major >= 8
 }
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
     if (supportsNamespace()) {
         namespace "ru.vvdev.yamap"
@@ -40,11 +44,11 @@ android {
         }
     }
 
-    compileSdk 34
+    compileSdk safeExtGet('compileSdkVersion', 34)
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 34
+        minSdkVersion safeExtGet('minSdkVersion', 23)
+        targetSdkVersion safeExtGet('targetSdkVersion', 34)
     }
     lintOptions {
         abortOnError false
