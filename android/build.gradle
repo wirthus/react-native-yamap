@@ -1,5 +1,10 @@
 import com.android.Version
 
+def DEFAULT_COMPILE_SDK_VERSION          = 33
+def DEFAULT_TARGET_SDK_VERSION           = 33
+def DEFAULT_MIN_SDK_VERSION              = 21
+def DEFAULT_GOOGLE_PLAY_SERVICES_VERSION = "21.0.1"
+
 buildscript {
     repositories {
         google()
@@ -44,11 +49,11 @@ android {
         }
     }
 
-    compileSdk safeExtGet('compileSdkVersion', 34)
+    compileSdk safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
 
     defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', 23)
-        targetSdkVersion safeExtGet('targetSdkVersion', 34)
+        minSdkVersion safeExtGet('minSdkVersion', DEFAULT_MIN_SDK_VERSION)
+        targetSdkVersion safeExtGet('targetSdkVersion', DEFAULT_TARGET_SDK_VERSION)
     }
     lintOptions {
         abortOnError false
@@ -64,7 +69,10 @@ dependencies {
     // For < 0.71, this will be from the local maven repo
     // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
     //noinspection GradleDynamicVersion
-    implementation 'com.facebook.react:react-native:+'
-    implementation 'com.google.android.gms:play-services-location:21.2.0'
-    implementation 'com.yandex.android:maps.mobile:4.6.1-full'
+    implementation "com.facebook.react:react-native:+"
+
+    def googlePlayServicesVersion = safeExtGet('googlePlayServicesVersion', DEFAULT_GOOGLE_PLAY_SERVICES_VERSION)
+    implementation "com.google.android.gms:play-services-location:$googlePlayServicesVersion"
+
+    implementation "com.yandex.android:maps.mobile:4.6.1-full"
 }
