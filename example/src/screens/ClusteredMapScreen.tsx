@@ -8,7 +8,7 @@ export const ClusteredMapScreen = () => {
   return (
     <ClusteredYamap
       clusterColor="red"
-      initialRegion={{lat: 56.754215, lon: 38.421242, zoom: 9}}
+      initialRegion={{lat: 56.754215, lon: 38.421242, zoom: 6}}
       onMapLoaded={() => {
         setMarkerVisible(true)
       }}

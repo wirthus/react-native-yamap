@@ -73,7 +73,7 @@ export interface RoutesFoundEvent<T extends (DrivingInfo | MasstransitInfo)> {
   };
 }
 
-export type CameraUpdateReason = "APPLICATION" | "GESTURES";
+export type CameraUpdateReason = 'APPLICATION' | 'GESTURES';
 
 export interface CameraPosition {
   azimuth: number;
