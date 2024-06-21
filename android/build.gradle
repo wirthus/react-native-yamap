@@ -72,6 +72,9 @@ dependencies {
     implementation "com.facebook.react:react-native:+"
 
     def googlePlayServicesVersion = safeExtGet('googlePlayServicesVersion', DEFAULT_GOOGLE_PLAY_SERVICES_VERSION)
+    googlePlayServicesVersion = safeExtGet('playServicesVersion', googlePlayServicesVersion)
+    googlePlayServicesVersion = safeExtGet('playServicesLocationVersion', googlePlayServicesVersion)
+
     implementation "com.google.android.gms:play-services-location:$googlePlayServicesVersion"
 
     implementation "com.yandex.android:maps.mobile:4.6.1-full"
