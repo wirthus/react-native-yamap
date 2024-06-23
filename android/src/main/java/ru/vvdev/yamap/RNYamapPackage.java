@@ -6,10 +6,11 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import ru.vvdev.yamap.suggest.RNYandexSuggestModule;
 
 import java.util.Arrays;
 import java.util.List;
+
+import ru.vvdev.yamap.suggest.RNYandexSuggestModule;
 
 public class RNYamapPackage implements ReactPackage {
     public RNYamapPackage() {

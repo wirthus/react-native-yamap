@@ -1,12 +1,10 @@
 package ru.vvdev.yamap.view;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.os.Looper;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -26,15 +24,8 @@ import com.yandex.mapkit.map.RotationType;
 import com.yandex.runtime.image.ImageProvider;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Handler;
 
 import ru.vvdev.yamap.models.ReactMapObject;
-import ru.vvdev.yamap.utils.Callback;
-import ru.vvdev.yamap.utils.ImageLoader;
 
 public class YamapMarker extends ReactViewGroup implements MapObjectTapListener, ReactMapObject {
     public Point point;
@@ -42,14 +33,14 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
     private float scale = 1;
     private Boolean visible = true;
     private Boolean rotated = false;
-    private int YAMAP_FRAMES_PER_SECOND = 25;
+    private final int YAMAP_FRAMES_PER_SECOND = 25;
     private PointF markerAnchor = null;
     private String iconSource;
     private View _childView;
     private PlacemarkMapObject mapObject;
-    private ArrayList<View> childs = new ArrayList<>();
+    private final ArrayList<View> childs = new ArrayList<>();
 
-    private OnLayoutChangeListener childLayoutListener = new OnLayoutChangeListener() {
+    private final OnLayoutChangeListener childLayoutListener = new OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
             updateMarker();
@@ -126,8 +117,8 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
             }
             if (childs.size() == 0) {
                 if (!iconSource.equals("")) {
-                    YamapView parent = (YamapView)getParent();
-                    if (parent!=null) {
+                    YamapView parent = (YamapView) getParent();
+                    if (parent != null) {
                         parent.setImage(iconSource, mapObject, iconStyle);
                     }
                 }
@@ -135,14 +126,14 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
         }
     }
 
+    public MapObject getMapObject() {
+        return mapObject;
+    }
+
     public void setMapObject(MapObject obj) {
         mapObject = (PlacemarkMapObject) obj;
         mapObject.addTapListener(this);
         updateMarker();
-    }
-
-    public MapObject getMapObject() {
-        return mapObject;
     }
 
     public void setChildView(View view) {
@@ -187,10 +178,11 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
         valueAnimator.setDuration((long) duration);
         valueAnimator.setInterpolator(new LinearInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override public void onAnimationUpdate(ValueAnimator animation) {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
                 try {
                     float v = animation.getAnimatedFraction();
-                    moveAnimationLoop(startLat + v*deltaLat, startLon + v*deltaLon);
+                    moveAnimationLoop(startLat + v * deltaLat, startLon + v * deltaLon);
                 } catch (Exception ex) {
                     // I don't care atm..
                 }
@@ -207,10 +199,11 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
         valueAnimator.setDuration((long) duration);
         valueAnimator.setInterpolator(new LinearInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override public void onAnimationUpdate(ValueAnimator animation) {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
                 try {
                     float v = animation.getAnimatedFraction();
-                    rotateAnimationLoop(startDirection + v*delta);
+                    rotateAnimationLoop(startDirection + v * delta);
                 } catch (Exception ex) {
                     // I don't care atm..
                 }
