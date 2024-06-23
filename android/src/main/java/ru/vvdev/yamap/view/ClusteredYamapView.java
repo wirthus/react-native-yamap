@@ -9,7 +9,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.Cluster;
 import com.yandex.mapkit.map.ClusterListener;
@@ -22,7 +21,7 @@ import com.yandex.runtime.image.ImageProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ClusteredYamapView extends YamapView implements ClusterListener, ClusterTapListener, View.OnAttachStateChangeListener {
+public class ClusteredYamapView extends BaseYamapView implements ClusterListener, ClusterTapListener {
     static final double CLUSTER_RADIUS = 50;
     static final int MIN_ZOOM = 12;
 
@@ -36,13 +35,11 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
         super(context);
 
         _clusterCollection = getMapWindow().getMap().getMapObjects().addClusterizedPlacemarkCollection(this);
-
-        this.addOnAttachStateChangeListener(this);
     }
 
     @Override
-    public void onViewAttachedToWindow(@NonNull View v) {
-        MapKitFactory.getInstance().onStart();
+    public void onViewAttachedToWindow(@NonNull View view) {
+        super.onViewAttachedToWindow(view);
 
         if (_needRefreshPoints) {
             refreshPoints();
@@ -51,8 +48,8 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
     }
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull View v) {
-        MapKitFactory.getInstance().onStop();
+    public void onViewDetachedFromWindow(@NonNull View view) {
+        super.onViewDetachedFromWindow(view);
 
         _clusterCollection.clear();
         _needRefreshPoints = true;
@@ -129,8 +126,8 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
                 _placemarksMap.put(key, placemark);
 
                 var child = getChildAt(i);
-                if (child instanceof YamapMarker) {
-                    ((YamapMarker) child).setMapObject(placemark);
+                if (child instanceof final YamapMarker marker) {
+                    marker.setMapObject(placemark);
                 }
             }
         }
@@ -140,25 +137,7 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
     }
 
     private void updateUserMarkersColor() {
-        // _clusterCollection.clear();
-
-        // var image = new TextImageProvider(Integer.toString(_pointsList.size()));
-        // var image = ImageProvider.fromResource(getContext(), R.drawable.ic_dollar_pin);
-        // var placemarks = _clusterCollection.addPlacemarks(_pointsList, image, new IconStyle());
-        //
-        // for (var i = 0; i < placemarks.size(); i++) {
-        //     var placemark = placemarks.get(i);
-        //
-        //     var key = getPointKey(placemark.getGeometry());
-        //     _placemarksMap.put(key, placemark);
-        //
-        //     var child = getChildAt(i);
-        //     if (child instanceof YamapMarker) {
-        //         ((YamapMarker) child).setMapObject(placemark);
-        //     }
-        // }
-        //
-        // _clusterCollection.clusterPlacemarks(CLUSTER_RADIUS, MIN_ZOOM);
+        refreshPoints();
     }
 
     private ArrayList<Point> getPoints(ArrayList<Object> pointObjects) {
@@ -184,7 +163,6 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
     private String getPointKey(Point point) {
         return "" + point.getLatitude() + point.getLongitude();
     }
-
 }
 
 class TextImageProvider extends ImageProvider {

@@ -28,7 +28,7 @@ import java.util.Objects;
 import ru.vvdev.yamap.models.ReactMapObject;
 
 public class YamapMarker extends ReactViewGroup implements MapObjectTapListener, ReactMapObject {
-//    private final int YAMAP_FRAMES_PER_SECOND = 25;
+    //    private final int YAMAP_FRAMES_PER_SECOND = 25;
 
     private Point _point;
 
@@ -134,9 +134,9 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
         }
 
         if (_childs.isEmpty() && !_iconSource.isEmpty()) {
-            var parent = (YamapView) getParent();
-            if (parent != null) {
-                parent.setImage(_iconSource, _mapObject, iconStyle);
+            var parentView = getParent();
+            if (parentView instanceof final BaseYamapView view) {
+                view.setImage(_iconSource, _mapObject, iconStyle);
             }
         }
     }
