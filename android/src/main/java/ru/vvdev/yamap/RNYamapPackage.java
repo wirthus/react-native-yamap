@@ -19,12 +19,12 @@ public class RNYamapPackage implements ReactPackage {
     @NonNull
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new RNYamapModule(reactContext), new RNYandexSuggestModule(reactContext));
+        return Arrays.asList(new RNYamapModule(reactContext), new RNYandexSuggestModule(reactContext));
     }
 
     @NonNull
     public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
-        return Arrays.<ViewManager>asList(
+        return Arrays.asList(
                 new YamapViewManager(),
                 new ClusteredYamapViewManager(),
                 new YamapPolygonManager(),

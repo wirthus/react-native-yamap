@@ -4,6 +4,7 @@ import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Promise;
@@ -27,6 +28,7 @@ public class RNYandexSuggestModule extends ReactContextBaseJavaModule {
         super(reactContext);
     }
 
+    @NonNull
     @Override
     public String getName() {
         return "YamapSuggests";
@@ -43,18 +45,8 @@ public class RNYandexSuggestModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 getSuggestClient(getReactApplicationContext()).suggest(text,
-                        new Callback<List<MapSuggestItem>>() {
-                            @Override
-                            public void invoke(List<MapSuggestItem> result) {
-                                promise.resolve(argsHelper.createSuggestsMapFrom(result));
-                            }
-                        },
-                        new Callback<Throwable>() {
-                            @Override
-                            public void invoke(Throwable e) {
-                                promise.reject(ERR_SUGGEST_FAILED, "suggest request: " + e.getMessage());
-                            }
-                        }
+                        result -> promise.resolve(argsHelper.createSuggestsMapFrom(result)),
+                        e -> promise.reject(ERR_SUGGEST_FAILED, "suggest request: " + e.getMessage())
                 );
             }
         });
@@ -90,12 +82,7 @@ public class RNYandexSuggestModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     void reset() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getSuggestClient(getReactApplicationContext()).resetSuggest();
-            }
-        });
+        runOnUiThread(() -> getSuggestClient(getReactApplicationContext()).resetSuggest());
     }
 
     private MapSuggestClient getSuggestClient(Context context) {
