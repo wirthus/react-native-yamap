@@ -4,7 +4,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
@@ -40,6 +39,7 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
     YamapViewManager() {
     }
 
+    @NonNull
     @Override
     public String getName() {
         return REACT_CLASS;
@@ -55,8 +55,7 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
         return MapBuilder.builder()
                 .put("routes", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onRouteFound")))
                 .put("cameraPosition", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onCameraPositionReceived")))
-                .put("cameraPositionChange", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onCameraPositionChange")))
-                .put("cameraPositionChangeEnd", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onCameraPositionChangeEnd")))
+                .put("cameraPositionChanged", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onCameraPositionChanged")))
                 .put("visibleRegion", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onVisibleRegionReceived")))
                 .put("onMapPress", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onMapPress")))
                 .put("onMapLongPress", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onMapLongPress")))
@@ -84,16 +83,15 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
     }
 
     @Override
-    public void receiveCommand(
-            @NonNull YamapView view,
-            String commandType,
-            @Nullable ReadableArray args) {
-        Assertions.assertNotNull(view);
-        Assertions.assertNotNull(args);
+    public void receiveCommand(@NonNull YamapView view, String commandType, @Nullable ReadableArray args) {
+        // Assertions.assertNotNull(view);
+        // Assertions.assertNotNull(args);
 
         switch (commandType) {
             case "setCenter":
-                setCenter(castToYaMapView(view), args.getMap(0), (float) args.getDouble(1), (float) args.getDouble(2), (float) args.getDouble(3), (float) args.getDouble(4), args.getInt(5));
+                if (args != null) {
+                    setCenter(castToYaMapView(view), args.getMap(0), (float) args.getDouble(1), (float) args.getDouble(2), (float) args.getDouble(3), (float) args.getDouble(4), args.getInt(5));
+                }
                 break;
 
             case "fitAllMarkers":
@@ -148,10 +146,7 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
                 break;
 
             default:
-                throw new IllegalArgumentException(String.format(
-                        "Unsupported command %d received by %s.",
-                        commandType,
-                        getClass().getSimpleName()));
+                throw new IllegalArgumentException(String.format("Unsupported command %s received by %s.", commandType, getClass().getSimpleName()));
         }
     }
 
@@ -162,7 +157,7 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
     @Nonnull
     @Override
     public YamapView createViewInstance(@Nonnull ThemedReactContext context) {
-        YamapView view = new YamapView(context);
+        var view = new YamapView(context);
         MapKitFactory.getInstance().onStart();
         view.onStart();
 
@@ -170,11 +165,11 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
     }
 
     private void setCenter(YamapView view, ReadableMap center, float zoom, float azimuth, float tilt, float duration, int animation) {
-        if (center != null) {
-            Point centerPosition = new Point(center.getDouble("lat"), center.getDouble("lon"));
-            CameraPosition pos = new CameraPosition(centerPosition, zoom, azimuth, tilt);
-            view.setCenter(pos, duration, animation);
-        }
+        if (center == null) return;
+
+        var centerPosition = new Point(center.getDouble("lat"), center.getDouble("lon"));
+        var pos = new CameraPosition(centerPosition, zoom, azimuth, tilt);
+        view.setCenter(pos, duration, animation);
     }
 
     private void fitAllMarkers(View view) {
@@ -182,49 +177,41 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
     }
 
     private void fitMarkers(View view, ReadableArray jsPoints) {
-        if (jsPoints != null) {
-            ArrayList<Point> points = new ArrayList<>();
+        if (jsPoints == null) return;
 
-            for (int i = 0; i < jsPoints.size(); ++i) {
-                ReadableMap point = jsPoints.getMap(i);
-                if (point != null) {
-                    points.add(new Point(point.getDouble("lat"), point.getDouble("lon")));
-                }
-            }
+        var points = new ArrayList<Point>();
 
-            castToYaMapView(view).fitMarkers(points);
+        for (var i = 0; i < jsPoints.size(); ++i) {
+            var point = jsPoints.getMap(i);
+            points.add(new Point(point.getDouble("lat"), point.getDouble("lon")));
         }
+
+        castToYaMapView(view).fitMarkers(points);
     }
 
     private void findRoutes(View view, ReadableArray jsPoints, ReadableArray jsVehicles, String id) {
-        if (jsPoints != null) {
-            ArrayList<Point> points = new ArrayList<>();
+        if (jsPoints == null) return;
 
-            for (int i = 0; i < jsPoints.size(); ++i) {
-                ReadableMap point = jsPoints.getMap(i);
-                if (point != null) {
-                    points.add(new Point(point.getDouble("lat"), point.getDouble("lon")));
-                }
-            }
-
-            ArrayList<String> vehicles = new ArrayList<>();
-
-            if (jsVehicles != null) {
-                for (int i = 0; i < jsVehicles.size(); ++i) {
-                    vehicles.add(jsVehicles.getString(i));
-                }
-            }
-
-            castToYaMapView(view).findRoutes(points, vehicles, id);
+        var points = new ArrayList<Point>();
+        for (var i = 0; i < jsPoints.size(); ++i) {
+            var point = jsPoints.getMap(i);
+            points.add(new Point(point.getDouble("lat"), point.getDouble("lon")));
         }
+        var vehicles = new ArrayList<String>();
+        if (jsVehicles != null) {
+            for (var i = 0; i < jsVehicles.size(); ++i) {
+                vehicles.add(jsVehicles.getString(i));
+            }
+        }
+        castToYaMapView(view).findRoutes(points, vehicles, id);
     }
 
     // PROPS
     @ReactProp(name = "userLocationIcon")
     public void setUserLocationIcon(View view, String icon) {
-        if (icon != null) {
-            castToYaMapView(view).setUserLocationIcon(icon);
-        }
+        if (icon == null) return;
+
+        castToYaMapView(view).setUserLocationIcon(icon);
     }
 
     @ReactProp(name = "userLocationIconScale")
@@ -284,23 +271,23 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
 
     @ReactProp(name = "mapStyle")
     public void setMapStyle(View view, String style) {
-        if (style != null) {
-            castToYaMapView(view).setMapStyle(style);
-        }
+        if (style == null) return;
+
+        castToYaMapView(view).setMapStyle(style);
     }
 
     @ReactProp(name = "mapType")
     public void setMapType(View view, String type) {
-        if (type != null) {
-            castToYaMapView(view).setMapType(type);
-        }
+        if (type == null) return;
+
+        castToYaMapView(view).setMapType(type);
     }
 
     @ReactProp(name = "initialRegion")
     public void setInitialRegion(View view, ReadableMap params) {
-        if (params != null) {
-            castToYaMapView(view).setInitialRegion(params);
-        }
+        if (params == null) return;
+
+        castToYaMapView(view).setInitialRegion(params);
     }
 
     @ReactProp(name = "interactive")
@@ -310,16 +297,16 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
 
     @ReactProp(name = "logoPosition")
     public void setLogoPosition(View view, ReadableMap params) {
-        if (params != null) {
-            castToYaMapView(view).setLogoPosition(params);
-        }
+        if (params == null) return;
+
+        castToYaMapView(view).setLogoPosition(params);
     }
 
     @ReactProp(name = "logoPadding")
     public void setLogoPadding(View view, ReadableMap params) {
-        if (params != null) {
-            castToYaMapView(view).setLogoPadding(params);
-        }
+        if (params == null) return;
+
+        castToYaMapView(view).setLogoPadding(params);
     }
 
     @Override
