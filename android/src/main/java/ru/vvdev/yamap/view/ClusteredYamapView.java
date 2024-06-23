@@ -9,12 +9,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.map.CameraPosition;
-import com.yandex.mapkit.map.CameraUpdateReason;
 import com.yandex.mapkit.map.Cluster;
 import com.yandex.mapkit.map.ClusterListener;
 import com.yandex.mapkit.map.ClusterTapListener;
@@ -29,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ClusteredYamapView extends YamapView implements ClusterListener, ClusterTapListener {
-    private ClusterizedPlacemarkCollection clusterCollection;
+    private final ClusterizedPlacemarkCollection clusterCollection;
     private int clusterColor = 0;
-    private HashMap<String, PlacemarkMapObject> placemarksMap = new HashMap();
+    private final HashMap<String, PlacemarkMapObject> placemarksMap = new HashMap();
     private ArrayList<Point> pointsList = new ArrayList<>();
 
     public ClusteredYamapView(Context context) {
@@ -43,18 +38,18 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
         clusterCollection.clear();
         placemarksMap.clear();
         ArrayList<Point> pt = new ArrayList<>();
-        for (int i = 0; i<points.size(); i++) {
+        for (int i = 0; i < points.size(); i++) {
             HashMap<String, Double> point = (HashMap<String, Double>) points.get(i);
             pt.add(new Point(point.get("lat"), point.get("lon")));
         }
         List<PlacemarkMapObject> placemarks = clusterCollection.addPlacemarks(pt, new TextImageProvider(""), new IconStyle());
         pointsList = pt;
-        for (int i = 0; i<placemarks.size(); i++) {
+        for (int i = 0; i < placemarks.size(); i++) {
             PlacemarkMapObject placemark = placemarks.get(i);
             placemarksMap.put("" + placemark.getGeometry().getLatitude() + placemark.getGeometry().getLongitude(), placemark);
             Object child = getChildAt(i);
             if (child instanceof YamapMarker) {
-                ((YamapMarker)child).setMapObject(placemark);
+                ((YamapMarker) child).setMapObject(placemark);
             }
         }
         clusterCollection.clusterPlacemarks(50, 12);
@@ -67,13 +62,13 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
 
     private void updateUserMarkersColor() {
         clusterCollection.clear();
-        List<PlacemarkMapObject> placemarks =  clusterCollection.addPlacemarks(pointsList, new TextImageProvider(Integer.toString(pointsList.size())), new IconStyle());
-        for (int i = 0; i<placemarks.size(); i++) {
+        List<PlacemarkMapObject> placemarks = clusterCollection.addPlacemarks(pointsList, new TextImageProvider(Integer.toString(pointsList.size())), new IconStyle());
+        for (int i = 0; i < placemarks.size(); i++) {
             PlacemarkMapObject placemark = placemarks.get(i);
             placemarksMap.put("" + placemark.getGeometry().getLatitude() + placemark.getGeometry().getLongitude(), placemark);
             Object child = getChildAt(i);
             if (child instanceof YamapMarker) {
-                ((YamapMarker)child).setMapObject(placemark);
+                ((YamapMarker) child).setMapObject(placemark);
             }
         }
         clusterCollection.clusterPlacemarks(50, 12);
@@ -83,7 +78,7 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
     public void addFeature(View child, int index) {
         YamapMarker marker = (YamapMarker) child;
         PlacemarkMapObject placemark = placemarksMap.get("" + marker.point.getLatitude() + marker.point.getLongitude());
-        if (placemark!=null) {
+        if (placemark != null) {
             marker.setMapObject(placemark);
         }
     }
@@ -120,13 +115,16 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
         private static final float FONT_SIZE = 45;
         private static final float MARGIN_SIZE = 9;
         private static final float STROKE_SIZE = 9;
+        private final String text;
+
+        public TextImageProvider(String text) {
+            this.text = text;
+        }
 
         @Override
         public String getId() {
             return "text_" + text;
         }
-
-        private final String text;
 
         @Override
         public Bitmap getImage() {
@@ -163,10 +161,6 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
                     textPaint);
 
             return bitmap;
-        }
-
-        public TextImageProvider(String text) {
-            this.text = text;
         }
     }
 }

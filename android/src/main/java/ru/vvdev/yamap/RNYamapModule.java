@@ -1,14 +1,15 @@
 package ru.vvdev.yamap;
 
+import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
+
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.yandex.mapkit.MapKitFactory;
-import com.yandex.mapkit.transport.TransportFactory;
 import com.yandex.runtime.i18n.I18nManagerFactory;
 
 import java.util.HashMap;
@@ -16,20 +17,21 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
-
 public class RNYamapModule extends ReactContextBaseJavaModule {
     private static final String REACT_CLASS = "yamap";
-
-    private ReactApplicationContext getContext() {
-        return reactContext;
-    }
-
     private static ReactApplicationContext reactContext = null;
 
     RNYamapModule(ReactApplicationContext context) {
         super(context);
         reactContext = context;
+    }
+
+    private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
+    }
+
+    private ReactApplicationContext getContext() {
+        return reactContext;
     }
 
     @Override
@@ -103,9 +105,5 @@ public class RNYamapModule extends ReactContextBaseJavaModule {
                 successCb.invoke();
             }
         }));
-    }
-
-    private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
     }
 }

@@ -10,17 +10,17 @@ import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.yandex.mapkit.ScreenPoint;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.RequestPoint;
 import com.yandex.mapkit.RequestPointType;
+import com.yandex.mapkit.ScreenPoint;
 import com.yandex.mapkit.directions.DirectionsFactory;
 import com.yandex.mapkit.directions.driving.DrivingOptions;
 import com.yandex.mapkit.directions.driving.DrivingRoute;
@@ -29,32 +29,34 @@ import com.yandex.mapkit.directions.driving.DrivingRouterType;
 import com.yandex.mapkit.directions.driving.DrivingSection;
 import com.yandex.mapkit.directions.driving.DrivingSession;
 import com.yandex.mapkit.directions.driving.VehicleOptions;
-import com.yandex.mapkit.geometry.BoundingBox;
 import com.yandex.mapkit.geometry.Geometry;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.geometry.Polyline;
 import com.yandex.mapkit.geometry.SubpolylineHelper;
 import com.yandex.mapkit.layers.ObjectEvent;
+import com.yandex.mapkit.logo.Alignment;
+import com.yandex.mapkit.logo.HorizontalAlignment;
+import com.yandex.mapkit.logo.Padding;
+import com.yandex.mapkit.logo.VerticalAlignment;
 import com.yandex.mapkit.map.CameraListener;
-import com.yandex.mapkit.map.MapLoadStatistics;
-import com.yandex.mapkit.map.MapLoadedListener;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.map.CameraUpdateReason;
 import com.yandex.mapkit.map.CircleMapObject;
 import com.yandex.mapkit.map.ClusterizedPlacemarkCollection;
 import com.yandex.mapkit.map.IconStyle;
 import com.yandex.mapkit.map.InputListener;
+import com.yandex.mapkit.map.MapLoadStatistics;
+import com.yandex.mapkit.map.MapLoadedListener;
 import com.yandex.mapkit.map.MapObject;
+import com.yandex.mapkit.map.MapType;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.map.PolygonMapObject;
 import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.mapkit.map.VisibleRegion;
-import com.yandex.mapkit.map.MapType;
 import com.yandex.mapkit.mapview.MapView;
-import com.yandex.mapkit.logo.Alignment;
-import com.yandex.mapkit.logo.Padding;
-import com.yandex.mapkit.logo.HorizontalAlignment;
-import com.yandex.mapkit.logo.VerticalAlignment;
+import com.yandex.mapkit.traffic.TrafficLayer;
+import com.yandex.mapkit.traffic.TrafficLevel;
+import com.yandex.mapkit.traffic.TrafficListener;
 import com.yandex.mapkit.transport.TransportFactory;
 import com.yandex.mapkit.transport.masstransit.FilterVehicleTypes;
 import com.yandex.mapkit.transport.masstransit.MasstransitRouter;
@@ -73,9 +75,6 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener;
 import com.yandex.mapkit.user_location.UserLocationView;
 import com.yandex.runtime.Error;
 import com.yandex.runtime.image.ImageProvider;
-import com.yandex.mapkit.traffic.TrafficLayer;
-import com.yandex.mapkit.traffic.TrafficListener;
-import com.yandex.mapkit.traffic.TrafficLevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,23 +100,32 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         put("trolleybus", "#55CfDC");
         put("walk", "#333333");
     }};
+    static private final HashMap<String, ImageProvider> icons = new HashMap<>();
     private String userLocationIcon = "";
     private float userLocationIconScale = 1.f;
     private Bitmap userLocationBitmap = null;
-    private RouteManager routeMng = new RouteManager();
-    private MasstransitRouter masstransitRouter = TransportFactory.getInstance().createMasstransitRouter();
-    private DrivingRouter drivingRouter;
+    private final RouteManager routeMng = new RouteManager();
+    private final MasstransitRouter masstransitRouter = TransportFactory.getInstance().createMasstransitRouter();
+    private final DrivingRouter drivingRouter;
     private ClusterizedPlacemarkCollection clusterCollection;
-    private PedestrianRouter pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter();
+    private final PedestrianRouter pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter();
     private UserLocationLayer userLocationLayer = null;
     private int userLocationAccuracyFillColor = 0;
     private int userLocationAccuracyStrokeColor = 0;
     private float userLocationAccuracyStrokeWidth = 0.f;
     private TrafficLayer trafficLayer = null;
-    static private HashMap<String, ImageProvider> icons = new HashMap<>();
+    private UserLocationView userLocationView = null;
+
+    public YamapView(Context context) {
+        super(context);
+        drivingRouter = DirectionsFactory.getInstance().createDrivingRouter(DrivingRouterType.COMBINED);
+        getMap().addCameraListener(this);
+        getMap().addInputListener(this);
+        getMap().setMapLoadedListener(this);
+    }
 
     void setImage(final String iconSource, final PlacemarkMapObject mapObject, final IconStyle iconStyle) {
-        if (icons.get(iconSource)==null) {
+        if (icons.get(iconSource) == null) {
             ImageLoader.DownloadImageBitmap(getContext(), iconSource, new Callback<Bitmap>() {
                 @Override
                 public void invoke(Bitmap bitmap) {
@@ -137,16 +145,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
             mapObject.setIcon(Objects.requireNonNull(icons.get(iconSource)));
             mapObject.setIconStyle(iconStyle);
         }
-    }
-
-    private UserLocationView userLocationView = null;
-
-    public YamapView(Context context) {
-        super(context);
-        drivingRouter = DirectionsFactory.getInstance().createDrivingRouter(DrivingRouterType.COMBINED);
-        getMap().addCameraListener(this);
-        getMap().addInputListener(this);
-        getMap().setMapLoadedListener(this);
     }
 
     // REF
@@ -563,17 +561,17 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
 
     public void setFollowUser(Boolean follow) {
         if (userLocationLayer == null) {
-        setShowUserPosition(true);
+            setShowUserPosition(true);
         }
 
-        if(follow){
-        userLocationLayer.setAutoZoomEnabled(true);
-        userLocationLayer.setAnchor(
-            new PointF((float)(getWidth() * 0.5), (float)(getHeight() * 0.5)),
-            new PointF((float)(getWidth() * 0.5), (float)(getHeight() * 0.83)));
-        }else{
-        userLocationLayer.setAutoZoomEnabled(false);
-        userLocationLayer.resetAnchor();
+        if (follow) {
+            userLocationLayer.setAutoZoomEnabled(true);
+            userLocationLayer.setAnchor(
+                    new PointF((float) (getWidth() * 0.5), (float) (getHeight() * 0.5)),
+                    new PointF((float) (getWidth() * 0.5), (float) (getHeight() * 0.83)));
+        } else {
+            userLocationLayer.setAutoZoomEnabled(false);
+            userLocationLayer.resetAnchor();
         }
     }
 
@@ -822,17 +820,17 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
     @Override
     public void onMapLoaded(MapLoadStatistics statistics) {
         WritableMap data = Arguments.createMap();
-        data.putInt("renderObjectCount",statistics.getRenderObjectCount());
-        data.putDouble("curZoomModelsLoaded",statistics.getCurZoomModelsLoaded());
-        data.putDouble("curZoomPlacemarksLoaded",statistics.getCurZoomPlacemarksLoaded());
-        data.putDouble("curZoomLabelsLoaded",statistics.getCurZoomLabelsLoaded());
-        data.putDouble("curZoomGeometryLoaded",statistics.getCurZoomGeometryLoaded());
-        data.putDouble("tileMemoryUsage",statistics.getTileMemoryUsage());
-        data.putDouble("delayedGeometryLoaded",statistics.getDelayedGeometryLoaded());
-        data.putDouble("fullyAppeared",statistics.getFullyAppeared());
-        data.putDouble("fullyLoaded",statistics.getFullyLoaded());
+        data.putInt("renderObjectCount", statistics.getRenderObjectCount());
+        data.putDouble("curZoomModelsLoaded", statistics.getCurZoomModelsLoaded());
+        data.putDouble("curZoomPlacemarksLoaded", statistics.getCurZoomPlacemarksLoaded());
+        data.putDouble("curZoomLabelsLoaded", statistics.getCurZoomLabelsLoaded());
+        data.putDouble("curZoomGeometryLoaded", statistics.getCurZoomGeometryLoaded());
+        data.putDouble("tileMemoryUsage", statistics.getTileMemoryUsage());
+        data.putDouble("delayedGeometryLoaded", statistics.getDelayedGeometryLoaded());
+        data.putDouble("fullyAppeared", statistics.getFullyAppeared());
+        data.putDouble("fullyLoaded", statistics.getFullyLoaded());
         ReactContext reactContext = (ReactContext) getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onMapLoaded",data);
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onMapLoaded", data);
     }
 
     //trafficListener implementation

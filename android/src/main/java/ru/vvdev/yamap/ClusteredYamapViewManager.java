@@ -114,7 +114,7 @@ public class ClusteredYamapViewManager extends ViewGroupManager<ClusteredYamapVi
 
             case "setZoom":
                 if (args != null) {
-                    view.setZoom((float)args.getDouble(0), (float)args.getDouble(1), args.getInt(2));
+                    view.setZoom((float) args.getDouble(0), (float) args.getDouble(1), args.getInt(2));
                 }
                 break;
 
@@ -259,7 +259,7 @@ public class ClusteredYamapViewManager extends ViewGroupManager<ClusteredYamapVi
 
     @ReactProp(name = "followUser")
     public void setFollowUser(View view, Boolean follow) {
-      castToYaMapView(view).setFollowUser(follow);
+        castToYaMapView(view).setFollowUser(follow);
     }
 
     @ReactProp(name = "nightMode")
@@ -269,27 +269,27 @@ public class ClusteredYamapViewManager extends ViewGroupManager<ClusteredYamapVi
 
     @ReactProp(name = "scrollGesturesEnabled")
     public void setScrollGesturesEnabled(View view, Boolean scrollGesturesEnabled) {
-        castToYaMapView(view).setScrollGesturesEnabled(scrollGesturesEnabled == true);
+        castToYaMapView(view).setScrollGesturesEnabled(scrollGesturesEnabled);
     }
 
     @ReactProp(name = "rotateGesturesEnabled")
     public void setRotateGesturesEnabled(View view, Boolean rotateGesturesEnabled) {
-        castToYaMapView(view).setRotateGesturesEnabled(rotateGesturesEnabled == true);
+        castToYaMapView(view).setRotateGesturesEnabled(rotateGesturesEnabled);
     }
 
     @ReactProp(name = "zoomGesturesEnabled")
     public void setZoomGesturesEnabled(View view, Boolean zoomGesturesEnabled) {
-        castToYaMapView(view).setZoomGesturesEnabled(zoomGesturesEnabled == true);
+        castToYaMapView(view).setZoomGesturesEnabled(zoomGesturesEnabled);
     }
 
     @ReactProp(name = "tiltGesturesEnabled")
     public void setTiltGesturesEnabled(View view, Boolean tiltGesturesEnabled) {
-        castToYaMapView(view).setTiltGesturesEnabled(tiltGesturesEnabled == true);
+        castToYaMapView(view).setTiltGesturesEnabled(tiltGesturesEnabled);
     }
 
     @ReactProp(name = "fastTapEnabled")
     public void setFastTapEnabled(View view, Boolean fastTapEnabled) {
-        castToYaMapView(view).setFastTapEnabled(fastTapEnabled == true);
+        castToYaMapView(view).setFastTapEnabled(fastTapEnabled);
     }
 
     @ReactProp(name = "mapStyle")
