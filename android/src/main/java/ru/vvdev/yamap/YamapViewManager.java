@@ -10,7 +10,7 @@ import com.yandex.mapkit.MapKitFactory;
 import ru.vvdev.yamap.view.YamapView;
 
 public class YamapViewManager extends BaseYamapViewManager<YamapView> {
-    public static final String REACT_CLASS = "YamapViewManager";
+    public static final String REACT_CLASS = "YamapView";
 
     @NonNull
     @Override
