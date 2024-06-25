@@ -20,10 +20,7 @@ public class YamapViewManager extends BaseYamapViewManager<YamapView> {
 
     @Override
     protected YamapView createViewInstanceInternal(@NonNull ThemedReactContext context) {
-        var view = new YamapView(context);
-        MapKitFactory.getInstance().onStart();
-        view.onStart();
-        return view;
+        return new YamapView(context);
     }
 
     @Override
