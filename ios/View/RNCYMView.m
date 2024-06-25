@@ -57,8 +57,13 @@
     [placemarks removeAllObjects];
     [clusterCollection clear];
     NSMutableArray<YMKPoint*> *newMarkers = [NSMutableArray new];
-    for (NSDictionary *mark in markers) {
-        [newMarkers addObject:[YMKPoint pointWithLatitude:[[mark objectForKey:@"lat"] doubleValue] longitude:[[mark objectForKey:@"lon"] doubleValue]]];
+    unsigned long i, cnt = [markers count];
+    if (cnt % 2 != 0) {
+        [NSException raise:@"pointSize % 2 != 0" format:@"pointSize(%ld) %% 2 != 0", cnt];
+    }
+    for(i = 0; i < cnt; i = i + 2)
+    {
+        [newMarkers addObject:[YMKPoint pointWithLatitude:[[markers objectAtIndex:i] doubleValue] longitude:[[markers objectAtIndex:(i + 1)] doubleValue]]];
     }
     NSArray<YMKPlacemarkMapObject *>* newPlacemarks = [clusterCollection addPlacemarksWithPoints:newMarkers image:[self clusterImage:[NSNumber numberWithFloat:[newMarkers count]]] style:[YMKIconStyle new]];
     [placemarks addObjectsFromArray:newPlacemarks];
