@@ -42,14 +42,12 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
 
     private final ArrayList<View> _childs = new ArrayList<>();
 
-    private IconStyle _iconStyle;
-
     public YamapMarker(Context context) {
         super(context);
     }
 
     public void setPoint(Point point) {
-        // if (this._point. == point) return;
+        if (this._point == point) return;
         this._point = point;
 
         updateMarker();

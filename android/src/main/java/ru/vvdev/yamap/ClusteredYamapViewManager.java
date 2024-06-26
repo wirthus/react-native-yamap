@@ -41,8 +41,8 @@ public class ClusteredYamapViewManager extends BaseYamapViewManager<ClusteredYam
 
     @Override
     public void addView(ClusteredYamapView parent, @NonNull View child, int index) {
-        parent.addFeature(child, index);
         super.addView(parent, child, index);
+        parent.addFeature(child, index);
     }
 
     @Override
