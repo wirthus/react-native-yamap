@@ -3,14 +3,14 @@ import {Platform, StyleSheet} from "react-native";
 import {ClusteredYamap, Marker} from "../../../";
 
 export const ClusteredMapScreen = () => {
-  const [markerVisible, setMarkerVisible] = useState(false)
+  const [mapLoaded, setMapLoaded] = useState(false)
 
   return (
     <ClusteredYamap
       clusterColor="red"
       initialRegion={{lat: 56.754215, lon: 38.421242, zoom: 6}}
       onMapLoaded={() => {
-        setMarkerVisible(true)
+        setMapLoaded(true)
       }}
       clusteredMarkers={[
         {
@@ -34,7 +34,7 @@ export const ClusteredMapScreen = () => {
           point={info.point}
           scale={0.3}
           source={require('../assets/images/marker.png')}
-          visible={Platform.OS === 'android' ? markerVisible : true}
+          visible={Platform.OS === 'android' ? mapLoaded : true}
         />
       )}
       style={styles.container}
