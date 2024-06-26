@@ -25,7 +25,7 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
     static final double CLUSTER_RADIUS = 50;
     static final int MIN_ZOOM = 12;
 
-    private ClusterizedPlacemarkCollection _clusterCollection = null;
+    private final ClusterizedPlacemarkCollection _clusterCollection;
     private boolean _needRefreshPoints = false;
     private int _clusterColor = 0;
     private final HashMap<String, PlacemarkMapObject> _placemarksMap = new HashMap<>();
@@ -39,12 +39,12 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
 
     @Override
     public void onViewAttachedToWindow(@NonNull View view) {
-        super.onViewAttachedToWindow(view);
-
         if (_needRefreshPoints) {
             refreshPoints();
             _needRefreshPoints = false;
         }
+
+        super.onViewAttachedToWindow(view);
     }
 
     @Override
@@ -52,6 +52,7 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
         super.onViewDetachedFromWindow(view);
 
         _clusterCollection.clear();
+        _placemarksMap.clear();
         _needRefreshPoints = true;
     }
 
@@ -69,11 +70,14 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
     }
 
     @Override
-    public void addFeature(View child, int index) {
+    public void addFeature(@NonNull View child, int index) {
         var marker = (YamapMarker) child;
-        var placemark = _placemarksMap.get(getPointKey(marker.getPoint()));
-        if (placemark != null) {
+        if (!_placemarksMap.isEmpty()) {
+            var key = getPointKey(marker.getPoint());
+            var placemark = _placemarksMap.get(key);
             marker.setMapObject(placemark);
+        } else {
+            marker.setMapObject(null);
         }
     }
 
@@ -85,7 +89,10 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
             if (mapObject == null || !mapObject.isValid()) return;
 
             _clusterCollection.remove(mapObject);
-            _placemarksMap.remove(getPointKey(child.getPoint()));
+
+            if (!_placemarksMap.isEmpty()) {
+                _placemarksMap.remove(getPointKey(child.getPoint()));
+            }
         }
     }
 

@@ -28,7 +28,7 @@ public class YamapViewManager extends BaseYamapViewManager<YamapView> {
     }
 
     @Override
-    public void addView(YamapView parent, View child, int index) {
+    public void addView(YamapView parent, @NonNull View child, int index) {
         parent.addFeature(child, index);
         super.addView(parent, child, index);
     }
