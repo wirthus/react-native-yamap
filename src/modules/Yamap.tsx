@@ -2,14 +2,14 @@ import { NativeModules } from 'react-native';
 
 const { yamap } = NativeModules;
 
-export interface YaMapInterface {
+interface YamapInterface {
   init(apiKey: string): Promise<void>;
   setLocale(locale: string): Promise<void>;
   getLocale(): Promise<string>;
   resetLocale(): Promise<void>;
 }
 
-export const NativeYamapModule = yamap as YaMapInterface;
+export const NativeYamapModule = yamap as YamapInterface;
 
 export class YamapInstance {
   public static init(apiKey: string): Promise<void> {
