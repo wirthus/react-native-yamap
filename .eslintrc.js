@@ -1,5 +1,3 @@
-const { rules } = require('../../apps/mobile/.eslintrc');
-
 module.exports = {
   root: true,
   env: {
