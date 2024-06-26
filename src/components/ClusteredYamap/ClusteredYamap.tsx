@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import { processColor, requireNativeComponent } from 'react-native';
 
 import { useYamap } from '../../hooks/useYamap';
@@ -26,6 +26,20 @@ export const ClusteredYamap = forwardRef<ClusteredYamapRef, ClusteredYamapProps>
   const processedColor = useMemo(() => processColor(clusterColor), [clusterColor]);
   const points = useMemo(() => convertClusterMarkers(clusteredMarkers), [clusteredMarkers]);
   const children = useMemo(() => clusteredMarkers.map((t, i) => renderMarker(t, i)), [clusteredMarkers, renderMarker]);
+
+  useEffect(() => {
+    console.log('mount');
+
+    () => {
+      console.log('unmount');
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('update');
+  });
+
+  console.log('render');
 
   const {
     resolvedUserLocationIcon,
