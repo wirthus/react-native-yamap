@@ -15,6 +15,11 @@ export interface ScreenPoint {
   y: number;
 }
 
+export interface Anchor {
+  x: number;
+  y: number;
+}
+
 export interface MapLoaded {
   renderObjectCount: number;
   curZoomModelsLoaded: number;
