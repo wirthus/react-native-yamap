@@ -99,7 +99,7 @@ export const ClusteredYamap = forwardRef<ClusteredYamapRef, ClusteredYamapProps>
       clusterColor={processedColor}
 
       showUserPosition={showUserPosition}
-      userLocationIcon={resolvedUserLocationIcon}
+      userLocationIcon={resolvedUserLocationIcon?.uri}
       userLocationAccuracyFillColor={processedUserLocationAccuracyFillColor}
       userLocationAccuracyStrokeColor={processedUserLocationAccuracyStrokeColor}
 

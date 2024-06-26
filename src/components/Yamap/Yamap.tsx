@@ -86,7 +86,7 @@ export const Yamap = forwardRef<YamapRef, YamapProps>(({
       ref={nativeRef}
 
       showUserPosition={showUserPosition}
-      userLocationIcon={resolvedUserLocationIcon}
+      userLocationIcon={resolvedUserLocationIcon?.uri}
       userLocationAccuracyFillColor={processedUserLocationAccuracyFillColor}
       userLocationAccuracyStrokeColor={processedUserLocationAccuracyStrokeColor}
 

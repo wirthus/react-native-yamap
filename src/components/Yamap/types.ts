@@ -80,11 +80,13 @@ export interface YamapProps extends ViewProps {
 }
 
 type OmitYamapProps = OmitEx<YamapProps,
+  'userLocationIcon' |
   'userLocationAccuracyFillColor' |
   'userLocationAccuracyStrokeColor'
 >;
 
 export type YamapNativeComponentProps = OmitYamapProps & {
+  userLocationIcon?: string | null | undefined;
   userLocationAccuracyFillColor?: ProcessedColorValue | null | undefined;
   userLocationAccuracyStrokeColor?: ProcessedColorValue | null | undefined;
 
