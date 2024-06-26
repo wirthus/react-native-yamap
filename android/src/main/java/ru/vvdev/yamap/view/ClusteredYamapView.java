@@ -26,7 +26,6 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
     static final int MIN_ZOOM = 12;
 
     private final ClusterizedPlacemarkCollection _clusterCollection;
-    private boolean _needRefreshPoints = false;
     private int _clusterColor = 0;
     private final HashMap<String, PlacemarkMapObject> _placemarksMap = new HashMap<>();
     private ArrayList<Point> _pointsList = new ArrayList<>();
@@ -39,21 +38,12 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
 
     @Override
     public void onViewAttachedToWindow(@NonNull View view) {
-        if (_needRefreshPoints) {
-            refreshPoints();
-            _needRefreshPoints = false;
-        }
-
         super.onViewAttachedToWindow(view);
     }
 
     @Override
     public void onViewDetachedFromWindow(@NonNull View view) {
         super.onViewDetachedFromWindow(view);
-
-        _clusterCollection.clear();
-        _placemarksMap.clear();
-        _needRefreshPoints = true;
     }
 
     public void setClusteredMarkers(ArrayList<Object> pointObjects) {
@@ -140,7 +130,6 @@ public class ClusteredYamapView extends BaseYamapView implements ClusterListener
         }
 
         _clusterCollection.clusterPlacemarks(CLUSTER_RADIUS, MIN_ZOOM);
-        _needRefreshPoints = false;
     }
 
     private void updateUserMarkersColor() {
