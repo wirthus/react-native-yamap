@@ -1,6 +1,6 @@
 {
   "name": "@wirthus/react-native-yamap",
-  "version": "4.4.1",
+  "version": "4.4.2",
   "description": "Yandex.MapKit and Yandex.Geocoder for react-native",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
