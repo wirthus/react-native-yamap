@@ -1,5 +1,6 @@
 {
   "hooks": {
+    "before:bump": "pnpm run clean",
     "after:bump": "pnpm run build"
   },
   "git": {
